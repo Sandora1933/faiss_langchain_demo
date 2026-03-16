@@ -8,20 +8,15 @@ from langchain_core.messages import HumanMessage, AIMessage
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from prompts import PREFIX, QUESTION_PROMPT
+from utils import build_prompt
 
 
 def get_response(retriever, query, chat_history):
     matching_docs = retriever.invoke(query)
     print(f"Matching Docs: \n{matching_docs}")
+
     context = "\n".join([doc.page_content for doc in matching_docs])
-    prompt_template = ChatPromptTemplate.from_messages(
-        [
-            ("system", PREFIX + "\n" + QUESTION_PROMPT),
-            MessagesPlaceholder(variable_name="chat_history"),
-            ("user", "{query}"),
-        ]
-    )
+    prompt_template = build_prompt()
 
     llm = ChatOpenAI(model="gpt-4o-mini", api_key=os.getenv("OPENAI_API_KEY"))
 
