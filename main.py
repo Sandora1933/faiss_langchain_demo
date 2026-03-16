@@ -11,6 +11,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from utils import build_prompt
 from llm import create_llm
 from prepare_data import load_documents, split_documents
+from retriever import create_retriever
 
 
 def get_response(retriever, query, chat_history):
@@ -19,7 +20,6 @@ def get_response(retriever, query, chat_history):
 
     context = "\n".join([doc.page_content for doc in matching_docs])
     prompt_template = build_prompt()
-
     llm = create_llm()
 
     chain = prompt_template | llm
@@ -37,21 +37,13 @@ def main():
     print(f"Docs: \n{docs}")
 
     chunks = split_documents(docs)
-    
-    # Create embeddings
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-
-    # Create a FAISS vector store
-    vectorstore = FAISS.from_documents(chunks, embeddings)
-
-    retriever = vectorstore.as_retriever()
+    retriever = create_retriever(chunks)
 
     query = "Can I come to the store on Sunday?"
     chat_history = []
     response = get_response(retriever, query, chat_history)
     print(f"Response: {response.content}")
     
-
 
 if __name__ == "__main__":
     main()
