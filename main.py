@@ -9,6 +9,7 @@ from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from utils import build_prompt
+from llm import create_llm
 
 
 def get_response(retriever, query, chat_history):
@@ -18,7 +19,7 @@ def get_response(retriever, query, chat_history):
     context = "\n".join([doc.page_content for doc in matching_docs])
     prompt_template = build_prompt()
 
-    llm = ChatOpenAI(model="gpt-4o-mini", api_key=os.getenv("OPENAI_API_KEY"))
+    llm = create_llm()
 
     chain = prompt_template | llm
     response = chain.invoke({
