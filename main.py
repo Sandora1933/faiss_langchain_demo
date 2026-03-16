@@ -8,6 +8,8 @@ from langchain_core.messages import HumanMessage, AIMessage
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+from prompts import PREFIX, QUESTION_PROMPT
+
 
 def get_response(retriever, query, chat_history):
     matching_docs = retriever.invoke(query)
@@ -15,12 +17,7 @@ def get_response(retriever, query, chat_history):
     context = "\n".join([doc.page_content for doc in matching_docs])
     prompt_template = ChatPromptTemplate.from_messages(
         [
-            ("system", 
-            "You are a helpful assistant that answers questions.\n"
-            "Context:\n{context}\n"
-            "Use the provided context to answer the question if needed, otherwise use your own knowledge.\n"
-            "If you don't know the answer, say you don't know."
-            ),
+            ("system", PREFIX + "\n" + QUESTION_PROMPT),
             MessagesPlaceholder(variable_name="chat_history"),
             ("user", "{query}"),
         ]
