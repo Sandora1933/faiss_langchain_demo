@@ -10,6 +10,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from utils import build_prompt
 from llm import create_llm
+from prepare_data import load_documents, split_documents
 
 
 def get_response(retriever, query, chat_history):
@@ -32,12 +33,10 @@ def get_response(retriever, query, chat_history):
 
 def main():
     load_dotenv()
-    loader = TextLoader("data.txt", encoding="utf-8")
-    docs = loader.load()
+    docs = load_documents("data.txt")
     print(f"Docs: \n{docs}")
 
-    splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=50)
-    chunks = splitter.split_documents(docs)
+    chunks = split_documents(docs)
     
     # Create embeddings
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
