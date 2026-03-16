@@ -1,5 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from prompts import PREFIX, QUESTION_PROMPT
+from core.prompt import PREFIX, QUESTION_PROMPT
 
 
 def build_prompt():

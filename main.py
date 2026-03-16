@@ -8,10 +8,10 @@ from langchain_core.messages import HumanMessage, AIMessage
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from utils import build_prompt
-from llm import create_llm
-from prepare_data import load_documents, split_documents
-from retriever import create_retriever
+from utils.utils import build_prompt
+from core.llm import create_llm
+from core.prepare_data import load_documents, split_documents
+from core.retriever import create_retriever
 
 
 def get_response(retriever, query, chat_history):
@@ -33,7 +33,7 @@ def get_response(retriever, query, chat_history):
 
 def main():
     load_dotenv()
-    docs = load_documents("data.txt")
+    docs = load_documents("data/data.txt")
     print(f"Docs: \n{docs}")
 
     chunks = split_documents(docs)
